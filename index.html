@@ -1,7 +1,47 @@
+<!-- Code from d3-graph-gallery.com -->
 <!DOCTYPE html>
 <meta charset="utf-8" />
 
 <!-- Load d3.js -->
 <script src="https://d3js.org/d3.v4.js"></script>
 <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
-<canvas id="my_dataviz" width="440" height="320"></canvas>
+
+<!-- Create an element where the map will take place -->
+<canvas id="my_dataviz" width="840" height="620"></canvas>
+
+<script>
+  var canvas = document.getElementById('my_dataviz')
+
+  // Actual width and height. No idea if clienWidth would be a better option..?
+  var width = canvas.offsetWidth
+  var height = canvas.offsetHeight
+
+  var projection = d3
+    .geoNaturalEarth()
+    .scale(width / 1.3 / Math.PI)
+    .translate([width / 2, height / 2])
+
+  var ctx = canvas.getContext('2d')
+
+  const pathGenerator = d3.geoPath(projection, ctx)
+
+  // Draw a background
+  ctx.fillStyle = '#ddd'
+  ctx.fillRect(0, 0, width, height)
+
+  d3.json(
+    'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson',
+    function (data) {
+      ctx.beginPath()
+
+      // Got the positions of the path
+      pathGenerator(data)
+
+      ctx.fillStyle = '#999'
+      ctx.fill()
+
+      ctx.strokeStyle = '#69b3a2'
+      ctx.stroke()
+    }
+  )
+</script>
